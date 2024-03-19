@@ -1,14 +1,49 @@
 import { useForm } from "react-hook-form";
+import Swal from "sweetalert2";
 
 const AddBooks = () => {
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm();
-  console.log(watch("example"));
-  const onSubmit = (data) => console.log(data);
+  // console.log(watch("example"));
+  const onSubmit = async (data) => {
+    console.log(data);
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, Insert the Data!",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const response = await fetch("http://localhost:8080/books", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        });
+        if (!response.ok) {
+          throw new Error(response.message);
+        }
+
+        const responseData = await response.json();
+        console.log("Response:", responseData);
+
+        if (responseData?.affectedRows === 1) {
+          Swal.fire({
+            title: "Inserted",
+            text: "Your Book has been inserted.",
+            icon: "success",
+          });
+        }
+      }
+    });
+  };
   return (
     <div className="max-w-6xl mx-auto py-[3%]">
       <form className="" onSubmit={handleSubmit(onSubmit)}>
@@ -25,7 +60,7 @@ const AddBooks = () => {
         <input
           placeholder="Description"
           className="bg-red-100 block py-2 px-2 rounded-md"
-          {...register("desc")}
+          {...register("decs")}
         />
 
         <label className="my-2 block font-medium">Enter Cover URL</label>
