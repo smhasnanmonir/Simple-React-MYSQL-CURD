@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 
 const HomeContent = () => {
@@ -64,9 +65,12 @@ const HomeContent = () => {
               <p>{dat?.decs}</p>
             </div>
             <div className="flex gap-2 py-[5px">
-              <button className="py-[3px] bg-green-300 px-[7px] text-xl">
+              <Link
+                to={`/updateBooks/${dat?.id}`}
+                className="block py-[3px] bg-green-300 px-[7px] text-xl"
+              >
                 Edit
-              </button>
+              </Link>
               <button
                 onClick={() => handleDelete(dat?.id)}
                 className="py-[3px] bg-red-300 px-[7px] text-xl"
